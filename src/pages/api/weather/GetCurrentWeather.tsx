@@ -2,6 +2,7 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface WeatherLocationFormData {
+  ip: string;
   lat: string;
   lon: string;
 }
@@ -34,7 +35,7 @@ const GetCurrentWeather = async (req: NextApiRequest, res: NextApiResponse) => {
     const ipInfoApiToken = process.env.IP_INFO_API_KEY;
     const openWeatherApiKey = process.env.OPEN_WEATHER_API_KEY;
 
-    const { lat, lon } = req.body as WeatherLocationFormData;
+    const { ip, lat, lon } = req.body as WeatherLocationFormData;
 
     if (!lat || !lon) {
       const ipLocationResponse = await axios.get(
@@ -48,8 +49,10 @@ const GetCurrentWeather = async (req: NextApiRequest, res: NextApiResponse) => {
         ",",
       )[1];
     } else {
-      if(!lat || !lon) {
-        return res.status(401).json({message: "Latitude And Longitude Required In Payload"})
+      if (!lat || !lon) {
+        return res
+          .status(401)
+          .json({ message: "Latitude And Longitude Required In Payload" });
       }
       latitude = lat;
       longitude = lon;
